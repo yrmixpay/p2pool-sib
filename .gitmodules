@@ -1,6 +1,6 @@
 [submodule "dash-subsidy"]
-	path = dash-subsidy
+	path = sib-subsidy
 	url = https://github.com/jakehaas/dash_subsidy.git
 [submodule "x11-hash"]
-	path = x11-hash
+	path = x11-gost-hash
 	url = https://github.com/jakehaas/x11_hash.git
