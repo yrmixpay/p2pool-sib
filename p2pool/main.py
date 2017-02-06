@@ -81,11 +81,11 @@ def main(args, net, datadir_path, merged_urls, worker_endpoint):
         @defer.inlineCallbacks
         def connect_p2p():
             # connect to dashd over dash-p2p
-            print '''Testing dashd P2P connection to '%s:%s'...''' % (args.dashd_address, args.dashd_p2p_port)
+            print '''Testing sibcoind P2P connection to '%s:%s'...''' % (args.dashd_address, args.dashd_p2p_port)
             factory = dash_p2p.ClientFactory(net.PARENT)
             reactor.connectTCP(args.dashd_address, args.dashd_p2p_port, factory)
             def long():
-                print '''    ...taking a while. Common reasons for this include all of dashd's connection slots being used...'''
+                print '''    ...taking a while. Common reasons for this include all of sibcoind's connection slots being used...'''
             long_dc = reactor.callLater(5, long)
             yield factory.getProtocol() # waits until handshake is successful
             if not long_dc.called: long_dc.cancel()
@@ -98,7 +98,7 @@ def main(args, net, datadir_path, merged_urls, worker_endpoint):
         
         # connect to dashd over JSON-RPC and do initial getmemorypool
         url = '%s://%s:%i/' % ('https' if args.dashd_rpc_ssl else 'http', args.dashd_address, args.dashd_rpc_port)
-        print '''Testing dashd RPC connection to '%s' with username '%s'...''' % (url, args.dashd_rpc_username)
+        print '''Testing sibcoind RPC connection to '%s' with username '%s'...''' % (url, args.dashd_rpc_username)
         dashd = jsonrpc.HTTPProxy(url, dict(Authorization='Basic ' + base64.b64encode(args.dashd_rpc_username + ':' + args.dashd_rpc_password)), timeout=30)
         yield helper.check(dashd, net)
         temp_work = yield helper.getwork(dashd, net)
@@ -133,12 +133,12 @@ def main(args, net, datadir_path, merged_urls, worker_endpoint):
             if address is not None:
                 res = yield deferral.retry('Error validating cached address:', 5)(lambda: dashd.rpc_validateaddress(address))()
                 if not res['isvalid'] or not res['ismine']:
-                    print '    Cached address is either invalid or not controlled by local dashd!'
+                    print '    Cached address is either invalid or not controlled by local sibcoind!'
                     address = None
             
             if address is None:
-                print '    Getting payout address from dashd...'
-                address = yield deferral.retry('Error getting payout address from dashd:', 5)(lambda: dashd.rpc_getaccountaddress('p2pool'))()
+                print '    Getting payout address from sibcoind...'
+                address = yield deferral.retry('Error getting payout address from sibcoind:', 5)(lambda: dashd.rpc_getaccountaddress('p2pool'))()
             
             with open(address_path, 'wb') as f:
                 f.write(address)
@@ -205,7 +205,7 @@ def main(args, net, datadir_path, merged_urls, worker_endpoint):
 
             pubkeys = keypool()
             for i in range(args.numaddresses):
-                address = yield deferral.retry('Error getting a dynamic address from dashd:', 5)(lambda: dashd.rpc_getnewaddress('p2pool'))()
+                address = yield deferral.retry('Error getting a dynamic address from sibcoind:', 5)(lambda: dashd.rpc_getnewaddress('p2pool'))()
                 new_pubkey = dash_data.address_to_pubkey_hash(address, net.PARENT)
                 pubkeys.addkey(new_pubkey)
 
@@ -487,8 +487,8 @@ def run():
     parser = fixargparse.FixedArgumentParser(description='p2pool (version %s)' % (p2pool.__version__,), fromfile_prefix_chars='@')
     parser.add_argument('--version', action='version', version=p2pool.__version__)
     parser.add_argument('--net',
-        help='use specified network (default: dash)',
-        action='store', choices=sorted(realnets), default='dash', dest='net_name')
+        help='use specified network (default: sibcoin)',
+        action='store', choices=sorted(realnets), default='sibcoin', dest='net_name')
     parser.add_argument('--testnet',
         help='''use the network's testnet''',
         action='store_const', const=True, default=False, dest='testnet')
@@ -496,10 +496,10 @@ def run():
         help='enable debugging mode',
         action='store_const', const=True, default=False, dest='debug')
     parser.add_argument('-a', '--address',
-        help='generate payouts to this address (default: <address requested from dashd>), or (dynamic)',
+        help='generate payouts to this address (default: <address requested from sibcoind>), or (dynamic)',
         type=str, action='store', default=None, dest='address')
     parser.add_argument('-i', '--numaddresses',
-        help='number of dash auto-generated addresses to maintain for getwork dynamic address allocation',
+        help='number of sibcoin auto-generated addresses to maintain for getwork dynamic address allocation',
         type=int, action='store', default=2, dest='numaddresses')
     parser.add_argument('-t', '--timeaddresses',
         help='seconds between acquisition of new address and removal of single old (default: 2 days or 172800s)',
@@ -554,28 +554,28 @@ def run():
         help='listen on PORT on interface with ADDR for RPC connections from miners (default: all interfaces, %s)' % ', '.join('%s:%i' % (name, net.WORKER_PORT) for name, net in sorted(realnets.items())),
         type=str, action='store', default=None, dest='worker_endpoint')
     worker_group.add_argument('-f', '--fee', metavar='FEE_PERCENTAGE',
-        help='''charge workers mining to their own dash address (by setting their miner's username to a dash address) this percentage fee to mine on your p2pool instance. Amount displayed at http://127.0.0.1:WORKER_PORT/fee (default: 0)''',
+        help='''charge workers mining to their own sibcoin address (by setting their miner's username to a sibcoin address) this percentage fee to mine on your p2pool instance. Amount displayed at http://127.0.0.1:WORKER_PORT/fee (default: 0)''',
         type=float, action='store', default=0, dest='worker_fee')
     
-    dashd_group = parser.add_argument_group('dashd interface')
-    dashd_group.add_argument('--dashd-config-path', metavar='DASHD_CONFIG_PATH',
-        help='custom configuration file path (when dashd -conf option used)',
+    dashd_group = parser.add_argument_group('sibcoind interface')
+    dashd_group.add_argument('--sibcoind-config-path', metavar='SIBCOIND_CONFIG_PATH',
+        help='custom configuration file path (when sibcoind -conf option used)',
         type=str, action='store', default=None, dest='dashd_config_path')
-    dashd_group.add_argument('--dashd-address', metavar='DASHD_ADDRESS',
+    dashd_group.add_argument('--sibcoind-address', metavar='SIBCOIND_ADDRESS',
         help='connect to this address (default: 127.0.0.1)',
         type=str, action='store', default='127.0.0.1', dest='dashd_address')
-    dashd_group.add_argument('--dashd-rpc-port', metavar='DASHD_RPC_PORT',
-        help='''connect to JSON-RPC interface at this port (default: %s <read from dash.conf if password not provided>)''' % ', '.join('%s:%i' % (name, net.PARENT.RPC_PORT) for name, net in sorted(realnets.items())),
+    dashd_group.add_argument('--sibcoind-rpc-port', metavar='SIBCOIND_RPC_PORT',
+        help='''connect to JSON-RPC interface at this port (default: %s <read from sibcoin.conf if password not provided>)''' % ', '.join('%s:%i' % (name, net.PARENT.RPC_PORT) for name, net in sorted(realnets.items())),
         type=int, action='store', default=None, dest='dashd_rpc_port')
-    dashd_group.add_argument('--dashd-rpc-ssl',
+    dashd_group.add_argument('--sibcoind-rpc-ssl',
         help='connect to JSON-RPC interface using SSL',
         action='store_true', default=False, dest='dashd_rpc_ssl')
-    dashd_group.add_argument('--dashd-p2p-port', metavar='DASHD_P2P_PORT',
-        help='''connect to P2P interface at this port (default: %s <read from dash.conf if password not provided>)''' % ', '.join('%s:%i' % (name, net.PARENT.P2P_PORT) for name, net in sorted(realnets.items())),
+    dashd_group.add_argument('--sibcoind-p2p-port', metavar='SIBCOIND_P2P_PORT',
+        help='''connect to P2P interface at this port (default: %s <read from sibcoin.conf if password not provided>)''' % ', '.join('%s:%i' % (name, net.PARENT.P2P_PORT) for name, net in sorted(realnets.items())),
         type=int, action='store', default=None, dest='dashd_p2p_port')
     
-    dashd_group.add_argument(metavar='DASHD_RPCUSERPASS',
-        help='dashd RPC interface username, then password, space-separated (only one being provided will cause the username to default to being empty, and none will cause P2Pool to read them from dash.conf)',
+    dashd_group.add_argument(metavar='SIBCOIND_RPCUSERPASS',
+        help='sibcoind RPC interface username, then password, space-separated (only one being provided will cause the username to default to being empty, and none will cause P2Pool to read them from sibcoin.conf)',
         type=str, action='store', default=[], nargs='*', dest='dashd_rpc_userpass')
     
     args = parser.parse_args()
@@ -600,7 +600,7 @@ def run():
     if args.dashd_rpc_password is None:
         conf_path = args.dashd_config_path or net.PARENT.CONF_FILE_FUNC()
         if not os.path.exists(conf_path):
-            parser.error('''dash configuration file not found. Manually enter your RPC password.\r\n'''
+            parser.error('''sibcoin configuration file not found. Manually enter your RPC password.\r\n'''
                 '''If you actually haven't created a configuration file, you should create one at %s with the text:\r\n'''
                 '''\r\n'''
                 '''server=1\r\n'''
@@ -627,7 +627,7 @@ def run():
         if 'rpcssl' in contents and contents['rpcssl'] != '0':
                 args.dashd_rpc_ssl = True
         if args.dashd_rpc_password is None:
-            parser.error('''dash configuration file didn't contain an rpcpassword= line! Add one!''')
+            parser.error('''sibcoin configuration file didn't contain an rpcpassword= line! Add one!''')
     
     if args.dashd_rpc_username is None:
         args.dashd_rpc_username = ''
