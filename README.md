@@ -2,7 +2,7 @@ Requirements:
 -------------------------
 Generic:
 
-* Dashd >=0.11.2.17
+* Sibcoind >=0.16.0.5
 * Python >=2.7
 * Twisted >=13.0.0
 * Zope.interface >=3.8.0
@@ -19,14 +19,14 @@ Download the required submodules:
     git submodule init
     git submodule update
 
-x11_hash:
+x11_gost_hash:
 
-    cd x11-hash
+    cd x11-gost-hash
     python setup.py install
 
-dash_subsidy:
+sib_subsidy:
 
-    cd dash-subsidy
+    cd sib-subsidy
     python setup.py install
 
 Running P2Pool:
