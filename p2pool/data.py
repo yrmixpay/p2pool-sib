@@ -48,8 +48,8 @@ def load_share(share, net, peer_addr):
         return Share(net, peer_addr, Share.share_type.unpack(share['contents']))
     else:
         raise ValueError('unknown share type: %r' % (share['type'],))
-# XqPQ26xGigKkq4yCNmTfgkRPdt8FyB547J => it`s eduffield address
-DONATION_SCRIPT = '41047559d13c3f81b1fadbd8dd03e4b5a1c73b05e2b980e00d467aa9440b29c7de23664dde6428d75cafed22ae4f0d302e26c5c5a5dd4d3e1b796d7281bdc9430f35ac'.decode('hex')
+# SfP1RUGG9XQc8TY3BvPJZsUuEK4JtY3KS9 => fond Mao address
+DONATION_SCRIPT = '0327fa8becb25f78ac4dbdcfb76867bf09ef7206673b1e2c929ea096b962d19c69'.decode('hex')
 
 class Share(object):
     VERSION = 14
