@@ -636,14 +636,14 @@ def get_warnings(tracker, best_share, net, dashd_getinfo, dashd_work_value):
     
     if dashd_getinfo['errors'] != '':
         if 'This is a pre-release test build' not in dashd_getinfo['errors']:
-            res.append('(from dashd) %s' % (dashd_getinfo['errors'],))
+            res.append('(from sibcoind) %s' % (dashd_getinfo['errors'],))
     
     version_warning = getattr(net, 'VERSION_WARNING', lambda v: None)(dashd_getinfo['version'])
     if version_warning is not None:
         res.append(version_warning)
     
     if time.time() > dashd_work_value['last_update'] + 60:
-        res.append('''LOST CONTACT WITH DASHD for %s! Check that it isn't frozen or dead!''' % (math.format_dt(time.time() - dashd_work_value['last_update']),))
+        res.append('''LOST CONTACT WITH SIBCOIND for %s! Check that it isn't frozen or dead!''' % (math.format_dt(time.time() - dashd_work_value['last_update']),))
     
     return res
 

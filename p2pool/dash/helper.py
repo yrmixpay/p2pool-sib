@@ -7,17 +7,17 @@ import p2pool
 from p2pool.dash import data as dash_data
 from p2pool.util import deferral, jsonrpc
 
-@deferral.retry('Error while checking dash connection:', 1)
+@deferral.retry('Error while checking sibcoin connection:', 1)
 @defer.inlineCallbacks
 def check(dashd, net):
     if not (yield net.PARENT.RPC_CHECK(dashd)):
-        print >>sys.stderr, "    Check failed! Make sure that you're connected to the right dashd with --dashd-rpc-port!"
+        print >>sys.stderr, "    Check failed! Make sure that you're connected to the right sibcoind with --sibcoind-rpc-port!"
         raise deferral.RetrySilentlyException()
     if not net.VERSION_CHECK((yield dashd.rpc_getinfo())['version']):
-        print >>sys.stderr, '    dash version too old! Upgrade to 0.11.2.17 or newer!'
+        print >>sys.stderr, '    Sibcoin version too old! Upgrade to 0.16.0.5 or newer!'
         raise deferral.RetrySilentlyException()
 
-@deferral.retry('Error getting work from dashd:', 3)
+@deferral.retry('Error getting work from sibcoind:', 3)
 @defer.inlineCallbacks
 def getwork(dashd, net, use_getblocktemplate=False):
     def go():
@@ -68,7 +68,7 @@ def getwork(dashd, net, use_getblocktemplate=False):
 @deferral.retry('Error submitting primary block: (will retry)', 10, 10)
 def submit_block_p2p(block, factory, net):
     if factory.conn.value is None:
-        print >>sys.stderr, 'No dashd connection when block submittal attempted! %s%064x' % (net.PARENT.BLOCK_EXPLORER_URL_PREFIX, dash_data.hash256(dash_data.block_header_type.pack(block['header'])))
+        print >>sys.stderr, 'No sibcoind connection when block submittal attempted! %s%064x' % (net.PARENT.BLOCK_EXPLORER_URL_PREFIX, dash_data.hash256(dash_data.block_header_type.pack(block['header'])))
         raise deferral.RetrySilentlyException()
     factory.conn.value.send_block(block=block)
 

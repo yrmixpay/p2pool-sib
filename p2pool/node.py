@@ -269,11 +269,11 @@ class Node(object):
                 block = share.as_block_old(self.tracker, self.known_txs_var.value)
 
             if block is None:
-                print >>sys.stderr, 'GOT INCOMPLETE BLOCK FROM PEER! %s dash: %s%064x' % (p2pool_data.format_hash(share.hash), self.net.PARENT.BLOCK_EXPLORER_URL_PREFIX, share.header_hash)
+                print >>sys.stderr, 'GOT INCOMPLETE BLOCK FROM PEER! %s sibcoin: %s%064x' % (p2pool_data.format_hash(share.hash), self.net.PARENT.BLOCK_EXPLORER_URL_PREFIX, share.header_hash)
                 return
             helper.submit_block(block, True, self.factory, self.dashd, self.dashd_work, self.net)
             print
-            print 'GOT BLOCK FROM PEER! Passing to dashd! %s dash: %s%064x' % (p2pool_data.format_hash(share.hash), self.net.PARENT.BLOCK_EXPLORER_URL_PREFIX, share.header_hash)
+            print 'GOT BLOCK FROM PEER! Passing to sibcoind! %s sibcoin: %s%064x' % (p2pool_data.format_hash(share.hash), self.net.PARENT.BLOCK_EXPLORER_URL_PREFIX, share.header_hash)
             print
         
         def forget_old_txs():
