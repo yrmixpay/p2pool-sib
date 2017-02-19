@@ -62,7 +62,7 @@ nets = dict(
         MAX_TARGET=2 ** 256 // 2 ** 20 - 1,
         PERSIST=True,
         WORKER_PORT=9345,
-        BOOTSTRAP_ADDRS='p2pool.sibcoin.net'.split(' '),
+        BOOTSTRAP_ADDRS='p2pool.sibcoin.net p2pool.darknode.ru'.split(' '),
         ANNOUNCE_CHANNEL='#p2pool-sib',
         VERSION_CHECK=lambda v: v >= 110217,
     ),
