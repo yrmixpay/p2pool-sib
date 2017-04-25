@@ -24,5 +24,5 @@ CONF_FILE_FUNC = lambda: os.path.join(os.path.join(os.environ['APPDATA'], 'Sibco
 BLOCK_EXPLORER_URL_PREFIX = 'https://chain.sibcoin.net/block/'
 ADDRESS_EXPLORER_URL_PREFIX = 'https://chain.sibcoin.net/address/'
 TX_EXPLORER_URL_PREFIX = 'https://chain.sibcoin.net/tx/'
-SANE_TARGET_RANGE = (2**256//2**32//1000000 - 1, 2**256//2**32 - 1)
+SANE_TARGET_RANGE = (2**256//2**32//1000000 - 1, 2**256//2**22 - 1)
 DUST_THRESHOLD = 0.001e8
