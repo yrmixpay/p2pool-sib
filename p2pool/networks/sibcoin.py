@@ -14,6 +14,6 @@ MIN_TARGET = 0
 MAX_TARGET = 2**256//2**20 - 1
 PERSIST = True
 WORKER_PORT = 9345
-BOOTSTRAP_ADDRS = 'p2pool.sibcoin.net p2pool.darknode.ru crabs.pro'.split(' ')
+BOOTSTRAP_ADDRS = 'p2pool.sibcoin.net p2pool.darknode.ru crabs.pro sib.miningclub.info'.split(' ')
 ANNOUNCE_CHANNEL = '#p2pool-sib'
 VERSION_CHECK = lambda v: v >= 160100
