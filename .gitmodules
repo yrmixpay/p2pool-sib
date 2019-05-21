@@ -1,6 +1,6 @@
-[submodule "sib-subsidy"]
-	path = sib-subsidy
-	url = https://github.com/ivansib/sib_subsidy.git
+[submodule "yrmix-subsidy"]
+	path = yrmix-subsidy
+	url = https://github.com/yrmixpay/yrmix_subsidy.git
 [submodule "x11-gost-hash"]
 	path = x11-gost-hash
-	url = https://github.com/ivansib/x11_gost_hash.git
+	url = https://github.com/yrmixpay/x11_gost_hash.git
