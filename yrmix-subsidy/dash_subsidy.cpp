@@ -68,7 +68,7 @@ long long static GetBlockBaseValue(int nBits, int nHeight, bool fTestNet = false
     return nSubsidy;
 }
 
-static PyObject *sib_subsidy_getblockbasevalue(PyObject *self, PyObject *args)
+static PyObject *yrmix_subsidy_getblockbasevalue(PyObject *self, PyObject *args)
 {
     int input_bits;
     int input_height;
@@ -78,7 +78,7 @@ static PyObject *sib_subsidy_getblockbasevalue(PyObject *self, PyObject *args)
     return Py_BuildValue("L", output);
 }
 
-static PyObject *sib_subsidy_getblockbasevalue_testnet(PyObject *self, PyObject *args)
+static PyObject *yrmix_subsidy_getblockbasevalue_testnet(PyObject *self, PyObject *args)
 {
     int input_bits;
     int input_height;
@@ -88,12 +88,12 @@ static PyObject *sib_subsidy_getblockbasevalue_testnet(PyObject *self, PyObject 
     return Py_BuildValue("L", output);
 }
 
-static PyMethodDef sib_subsidy_methods[] = {
-    { "GetBlockBaseValue", sib_subsidy_getblockbasevalue, METH_VARARGS, "Returns the block value" },
-    { "GetBlockBaseValue_testnet", sib_subsidy_getblockbasevalue_testnet, METH_VARARGS, "Returns the block value for testnet" },
+static PyMethodDef yrmix_subsidy_methods[] = {
+    { "GetBlockBaseValue", yrmix_subsidy_getblockbasevalue, METH_VARARGS, "Returns the block value" },
+    { "GetBlockBaseValue_testnet", yrmix_subsidy_getblockbasevalue_testnet, METH_VARARGS, "Returns the block value for testnet" },
     { NULL, NULL, 0, NULL }
 };
 
 PyMODINIT_FUNC initsib_subsidy(void) {
-    (void) Py_InitModule("sib_subsidy", sib_subsidy_methods);
+    (void) Py_InitModule("yrmix_subsidy", yrmix_subsidy_methods);
 }

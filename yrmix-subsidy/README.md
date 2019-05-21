@@ -1,12 +1,12 @@
-sib_subsidy (v1.3)
+yrmix_subsidy (v1.3)
 ==============================
 
-Python module for Sibcoin's subsidy function.
+Python module for Yrmixcoin's subsidy function.
 
 Currently to be used for:
 
-* p2pool-sib (SUBSIDY_FUNC)
-* sibcoind-ncurses (block_subsidy)
+* p2pool-yrmix (SUBSIDY_FUNC)
+* yrmixcoind-ncurses (block_subsidy)
 
 
 Install
@@ -22,7 +22,7 @@ Usage
 
 Import the module and call the function:
 
-    import sib_subsidy as ds
+    import yrmix_subsidy as ds
 
     nBits = 469894998
     nHeight = 21288
